@@ -267,15 +267,21 @@ window.addEventListener('DOMContentLoaded', () => {
             callback: handleCredentialResponse
         });
 
-        // 2. Intercept custom interactive DOM nodes
         const googleButton = document.getElementById('google');
         if (googleButton) {
-            googleButton.addEventListener('click', () => {
-                // Triggers the secure native account selection overlay
-                google.accounts.id.prompt(); 
+            google.accounts.id.renderButton(googleButton, {
+                type: 'standard',
+                theme: 'outline',
+                size: 'large',
+                text: 'signin_with',
+                shape: 'rectangular',
+                logo_alignment: 'left'
             });
+
+            // Optional prompt for One Tap / auto sign-in if applicable.
+            google.accounts.id.prompt();
         } else {
-            console.error("Layout Exception: Element <button id='google'> not found in current DOM markup.");
+            console.error("Layout Exception: Element with id='google' not found in DOM.");
         }
     } else {
         console.error("Dependency Resolution Exception: Google Identity Services library failed to execute. Ensure script src is present in the document head.");
