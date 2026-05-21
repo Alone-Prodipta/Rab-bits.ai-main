@@ -253,13 +253,13 @@ if (toastTrigger) {
 
 //Google
 
-window.onload = function () {
+// window.onload = function () {
         
-        // Initialize the Google client
-        google.accounts.id.initialize({
-            client_id: "551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com",
-            callback: handleCredentialResponse
-        });
+//         // Initialize the Google client
+//         google.accounts.id.initialize({
+//             client_id: "551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com",
+//             callback: handleCredentialResponse
+//         });
 
         // Link your custom button to the Google Sign-In prompt
         const googleButton = document.getElementById('google');
@@ -267,7 +267,7 @@ window.onload = function () {
             // This triggers the secure Google account selection popup window
             google.accounts.id.prompt(); 
         };
-    };
+    //};
 
     // 3. This handles the response data when the user selects their account
     function handleCredentialResponse(response) {
