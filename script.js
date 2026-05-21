@@ -251,30 +251,36 @@ if (toastTrigger) {
   })
 }
 
-//Google
+/* =========================================
+   GOOGLE SIGN-IN INTEGRATION (FIXED)
+   ========================================= */
+window.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialize the Google client safely
+    if (typeof google !== 'undefined') {
+        google.accounts.id.initialize({
+            client_id: "551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
 
-// Google Sign-In Integration
-window.onload = function () {
-    // 1. Initialize the Google client with your active Client ID
-    google.accounts.id.initialize({
-        client_id: "551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com",
-        callback: handleCredentialResponse
-    });
-
-    // 2. Connect your custom toast button to trigger the authentication popup
-    const googleButton = document.getElementById('google');
-    if (googleButton) {
-        googleButton.onclick = () => {
-            google.accounts.id.prompt(); 
-        };
+        // 2. Link your custom button to the Google prompt
+        const googleButton = document.getElementById('google');
+        if (googleButton) {
+            googleButton.addEventListener('click', () => {
+                google.accounts.id.prompt(); // Triggers the secure account selection overlay
+            });
+        } else {
+            console.error("HTML Button with id='google' was not found in the DOM.");
+        }
+    } else {
+        console.error("Google Identity Services script hasn't loaded in the head section.");
     }
-};
+});
 
-// 3. Handle the response token when the user authenticates successfully
+// 3. Process the response token on authentication success
 function handleCredentialResponse(response) {
     const id_token = response.credential;
     
-    // Create a hidden form dynamically to securely POST the token to redirect.php
+    // Create a form programmatically to submit the token data directly to redirect.php
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'redirect.php'; 
@@ -287,6 +293,5 @@ function handleCredentialResponse(response) {
     form.appendChild(hiddenField);
     document.body.appendChild(form);
     
-    // Submit the form to pass execution to redirect.php
-    form.submit();
+    form.submit(); // Fire the request over to redirect.php
 }
