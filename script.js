@@ -254,36 +254,53 @@ if (toastTrigger) {
 /* =========================================
    GOOGLE SIGN-IN INTEGRATION (FIXED)
    ========================================= */
+/**
+ * Google Identity Services Initialization & Orchestration
+ * Seamlessly manages authentication workflows for local dev and live cloud servers.
+ */
+
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Initialize the Google client safely
+    // 1. Core Verification: Ensure the official Google SDK script is active
     if (typeof google !== 'undefined') {
         google.accounts.id.initialize({
             client_id: "551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com",
             callback: handleCredentialResponse
         });
 
-        // 2. Link your custom button to the Google prompt
+        // 2. Intercept custom interactive DOM nodes
         const googleButton = document.getElementById('google');
         if (googleButton) {
             googleButton.addEventListener('click', () => {
-                google.accounts.id.prompt(); // Triggers the secure account selection overlay
+                // Triggers the secure native account selection overlay
+                google.accounts.id.prompt(); 
             });
         } else {
-            console.error("HTML Button with id='google' was not found in the DOM.");
+            console.error("Layout Exception: Element <button id='google'> not found in current DOM markup.");
         }
     } else {
-        console.error("Google Identity Services script hasn't loaded in the head section.");
+        console.error("Dependency Resolution Exception: Google Identity Services library failed to execute. Ensure script src is present in the document head.");
     }
 });
 
-// 3. Process the response token on authentication success
+/**
+ * Capture the secure Identity Token assertion block and relay it to the database backend.
+ * Uses window.location.origin to match XAMPP and Render structures natively.
+ * * @param {Object} response - Validated identity asset array from Google API servers.
+ */
 function handleCredentialResponse(response) {
     const id_token = response.credential;
     
-    // Create a form programmatically to submit the token data directly to redirect.php
+    if (!id_token) {
+        console.warn("Authentication Request Aborted: Empty payload returned by provider identity broker.");
+        return;
+    }
+    
+    // Create a form programmatically to submit the token data securely via POST
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'redirect.php'; 
+    
+    // COMPILER OPTIMIZATION: Dynamically resolve target script matching environment routing
+    form.action = `${window.location.origin}/redirect.php`; 
 
     const hiddenField = document.createElement('input');
     hiddenField.type = 'hidden';
@@ -293,5 +310,6 @@ function handleCredentialResponse(response) {
     form.appendChild(hiddenField);
     document.body.appendChild(form);
     
-    form.submit(); // Fire the request over to redirect.php
+    // Execute data payload delivery over to redirect.php
+    form.submit(); 
 }
