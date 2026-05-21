@@ -253,39 +253,40 @@ if (toastTrigger) {
 
 //Google
 
-//window.onload = function () {
-        
-        // Initialize the Google client
-        google.accounts.id.initialize({
-            client_id: "551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com",
-            callback: handleCredentialResponse
-        });
+// Google Sign-In Integration
+window.onload = function () {
+    // 1. Initialize the Google client with your active Client ID
+    google.accounts.id.initialize({
+        client_id: "551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+    });
 
-        // Link your custom button to the Google Sign-In prompt
-        const googleButton = document.getElementById('google');
+    // 2. Connect your custom toast button to trigger the authentication popup
+    const googleButton = document.getElementById('google');
+    if (googleButton) {
         googleButton.onclick = () => {
-            // This triggers the secure Google account selection popup window
             google.accounts.id.prompt(); 
         };
-    //};
-
-    // 3. This handles the response data when the user selects their account
-    function handleCredentialResponse(response) {
-        const id_token = response.credential;
-        
-        // Create a hidden form dynamically to securely POST the token to redirect.php
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = 'redirect.php'; // Your raw PHP file name
-
-        const hiddenField = document.createElement('input');
-        hiddenField.type = 'hidden';
-        hiddenField.name = 'credential';
-        hiddenField.value = id_token;
-
-        form.appendChild(hiddenField);
-        document.body.appendChild(form);
-        
-        // Submit the form to run redirect.php
-        form.submit();
     }
+};
+
+// 3. Handle the response token when the user authenticates successfully
+function handleCredentialResponse(response) {
+    const id_token = response.credential;
+    
+    // Create a hidden form dynamically to securely POST the token to redirect.php
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'redirect.php'; 
+
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'credential';
+    hiddenField.value = id_token;
+
+    form.appendChild(hiddenField);
+    document.body.appendChild(form);
+    
+    // Submit the form to pass execution to redirect.php
+    form.submit();
+}
