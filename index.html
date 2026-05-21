@@ -28,12 +28,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                <!--button id="google">Google</button-->
                 <div class="toast-body">
-                    <div id="g_id_onload"
-                        data-client_id="551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com"
-                        data-login_uri="https://rab-bits.onrender.com/redirect.php"
-                        data-auto_prompt="false">
+                    <div class="toast-body">
+                        <div id="g_id_onload"
+                            data-client_id="551517105916-ab64kirluov2pll51dve7qmv5la1dqcc.apps.googleusercontent.com"
+                            data-callback="handleCredentialResponse" data-auto_prompt="false">
+                        </div>
+
+                        <div id="google" class="g_id_signin" data-type="standard" data-shape="rectangular"
+                            data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left">
+                        </div>
                     </div>
 
                     <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
