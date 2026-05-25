@@ -34,7 +34,7 @@ if (count($token_parts) === 3) {
     $_SESSION['user_picture'] = $picture;
 
     // 7. Redirect them to your main dashboard or homepage
-    header("Location: dashboard.php");
+    header("Location: index.html");
     exit();
 
 } else {
