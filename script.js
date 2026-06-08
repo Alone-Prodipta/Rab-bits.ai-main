@@ -203,7 +203,7 @@ async function add() {
    ========================================= */
 function generateImage(prompt) {
     const seed = Math.floor(Math.random() * 100000); // Forces fresh generation
-    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=512&height=512&nologo=true&seed=${seed}`;
+    const url = `https://firefly.adobe.com/api/v1/generate?prompt=${encodeURIComponent(prompt)}&width=512&height=512&seed=${seed}`;
 
     const messageRow = document.createElement("div");
     messageRow.className = "chat-message chat-message-bot";
