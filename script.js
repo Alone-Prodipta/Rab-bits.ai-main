@@ -20,11 +20,7 @@ window.addEventListener('click', (event) => {
 });
 
 let info = document.getElementById("text");
-let searchInput = document.getElementById("search");
-let op = document.querySelector("nav");
-let chatContainer = document.querySelector(".chat");
-let conversationStarted = false;
-op.style.display = "none";
+let searchInput = d
 
 /* =========================================
    SEARCH & HISTORY LOGIC
@@ -57,7 +53,11 @@ searchInput.addEventListener('input', highlightSearch);
    MESSAGE DISPLAY FUNCTIONS
    ========================================= */
 function addBotMessage(message) {
-    const messageRow = document.createElement("div");
+    const messageRow = documentocument.getElementById("search");
+let op = document.querySelector("nav");
+let chatContainer = document.querySelector(".chat");
+let conversationStarted = false;
+op.style.display = "none";.createElement("div");
     messageRow.className = "chat-message chat-message-bot";
     const messageBubble = document.createElement("div");
     messageBubble.className = "message-bubble";
@@ -201,54 +201,77 @@ async function add() {
 /* =========================================
    FIXED IMAGE GENERATION SECTOR
    ========================================= */
-function generateImage(prompt) {
-    const seed = Math.floor(Math.random() * 100000); // Forces fresh generation
-    const url = `https://firefly.adobe.com/api/v1/generate?prompt=${encodeURIComponent(prompt)}&width=512&height=512&seed=${seed}`;
+async function generateImage(prompt) {
+  const seed = Math.floor(Math.random() * 100000); // Forces fresh generation
+  const url = `https://firefly.adobe.io/v1/images/generate`; // Official Firefly API endpoint
 
-    const messageRow = document.createElement("div");
-    messageRow.className = "chat-message chat-message-bot";
+  // Create message row and bubble
+  const messageRow = document.createElement("div");
+  messageRow.className = "chat-message chat-message-bot";
 
-    const messageBubble = document.createElement("div");
-    messageBubble.className = "message-bubble";
-    messageBubble.style.backgroundColor = "#333";
-    messageBubble.style.minHeight = "120px";
+  const messageBubble = document.createElement("div");
+  messageBubble.className = "message-bubble";
+  messageBubble.style.backgroundColor = "#333";
+  messageBubble.style.minHeight = "120px";
 
-    const statusText = document.createElement("p");
-    statusText.innerHTML = `<b>Rab-bits:</b> Creating "${prompt}"...`;
-    statusText.style.margin = "0";
-    messageBubble.appendChild(statusText);
+  const statusText = document.createElement("p");
+  statusText.innerHTML = `<b>Rab-bits:</b> Creating "${prompt}"...`;
+  statusText.style.margin = "0";
+  messageBubble.appendChild(statusText);
 
+  // Append bubble to chat
+  messageRow.appendChild(messageBubble);
+  chatContainer.appendChild(messageRow);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  try {
+    // Call Adobe Firefly API
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer YOUR_ADOBE_API_KEY", // Replace with your key
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        prompt: prompt,
+        width: 512,
+        height: 512,
+        seed: seed
+      })
+    });
+
+    if (!response.ok) throw new Error("Server busy or invalid request");
+
+    const data = await response.json();
+    const imageUrl = data.image || data.output[0]; // Adjust based on API response
+
+    // Create and display image
     const img = new Image();
-    img.src = url;
+    img.src = imageUrl;
     img.style.width = "100%";
     img.style.borderRadius = "10px";
     img.style.marginTop = "10px";
-    img.style.display = "none"; // Hide until ready
-
-    img.onload = () => {
-        img.style.display = "block";
-        statusText.innerHTML = `<b>Rab-bits:</b> Done!`;
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    };
-
-    img.onerror = () => {
-        statusText.innerHTML = `<b>Rab-bits:</b> Sorry, the image server is currently busy.`;
-    };
+    img.style.display = "block";
 
     messageBubble.appendChild(img);
-    messageRow.appendChild(messageBubble);
-    chatContainer.appendChild(messageRow);
+    statusText.innerHTML = `<b>Rab-bits:</b> Done!`;
     chatContainer.scrollTop = chatContainer.scrollHeight;
+  } catch (error) {
+    statusText.innerHTML = `<b>Rab-bits:</b> Sorry, the image server is currently busy.`;
+  }
 }
 
-const toastTrigger = document.getElementById('liveToastBtn')
-const toastLiveExample = document.getElementById('liveToast')
+// ===============================
+// TOAST HANDLER
+// ===============================
+const toastTrigger = document.getElementById("liveToastBtn");
+const toastLiveExample = document.getElementById("liveToast");
 
 if (toastTrigger) {
-  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-  toastTrigger.addEventListener('click', () => {
-    toastBootstrap.show()
-  })
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+  toastTrigger.addEventListener("click", () => {
+    toastBootstrap.show();
+  });
 }
 
 /* =========================================
