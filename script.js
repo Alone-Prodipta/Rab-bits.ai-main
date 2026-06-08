@@ -53,11 +53,12 @@ searchInput.addEventListener('input', highlightSearch);
    MESSAGE DISPLAY FUNCTIONS
    ========================================= */
 function addBotMessage(message) {
-    const messageRow = documentocument.getElementById("search");
-let op = document.querySelector("nav");
-let chatContainer = document.querySelector(".chat");
-let conversationStarted = false;
-op.style.display = "none";.createElement("div");
+    const messageRow = document.createElement("div");
+    let op = document.querySelector("nav");
+    let chatContainer = document.querySelector(".chat");
+    let conversationStarted = false;
+    op.style.display = "none";
+    
     messageRow.className = "chat-message chat-message-bot";
     const messageBubble = document.createElement("div");
     messageBubble.className = "message-bubble";
