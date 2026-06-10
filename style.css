@@ -260,7 +260,11 @@ button:hover {
     background-color: black;
     color: white;
 }
-
+.chat {
+    max-height: 70vh; /* Keeps the chat box constrained to the screen size */
+    overflow-y: auto;  /* Yields a scrollbar if messages exceed container height */
+    padding: 20px;
+}
 input,
 #search {
     width: 60%;

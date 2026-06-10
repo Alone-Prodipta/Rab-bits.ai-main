@@ -30,3 +30,7 @@ async function chat()
 }
 
 chat();
+
+
+const messageRow = document.createElement("div");
+messageRow.className = "chat-message chat-message-bot";

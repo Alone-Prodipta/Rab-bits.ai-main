@@ -343,3 +343,94 @@ function handleCredentialResponse(response) {
     // Execute data payload delivery over to redirect.php
     form.submit(); 
 }
+
+
+// Grab the DOM elements
+const fileInput = document.getElementById('fileInput');
+const chatContainer = document.getElementById('chatContainer');
+const welcomeText = document.getElementById('welcome_text');
+
+// Listen for when a file is selected
+fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0]; // Get the first uploaded file
+    
+    if (file) {
+        // 1. Hide the welcome text if it's still there
+        if (welcomeText) {
+            welcomeText.style.display = 'none';
+        }
+
+        // 2. Display the uploaded file in the message section
+        addUploadedFileMessage(file.name, file.size);
+        
+        // 3. Reset the input value so the same file can be uploaded again if needed
+        fileInput.value = '';
+    }
+});
+
+// Function to create and append the file block into the chat UI
+function addUploadedFileMessage(fileName, fileSize) {
+    // Convert bytes to a readable format (KB or MB)
+    const formattedSize = fileSize > 1024 * 1024 
+        ? (fileSize / (1024 * 1024)).toFixed(2) + ' MB' 
+        : (fileSize / 1024).toFixed(2) + ' KB';
+
+    // Create the main message row wrapper (sent by user)
+    const messageRow = document.createElement("div");
+    messageRow.className = "chat-message chat-message-user"; 
+    messageRow.style.display = "flex";
+    messageRow.style.justifyContent = "flex-end";
+    messageRow.style.margin = "10px 0";
+
+    // Create the inner file card container
+    const fileCard = document.createElement("div");
+    fileCard.className = "message-bubble file-bubble";
+    fileCard.style.backgroundColor = "#e1f5fe"; // Light blue distinct color for files
+    fileCard.style.padding = "10px 15px";
+    fileCard.style.borderRadius = "10px";
+    fileCard.style.display = "flex";
+    fileCard.style.alignItems = "center";
+    fileCard.style.maxWidth = "70%";
+    fileCard.style.border = "1px solid #b3e5fc";
+
+    // Add a File Icon using your existing FontAwesome setup
+    const icon = document.createElement("i");
+    icon.className = "fa fa-file";
+    icon.style.fontSize = "24px";
+    icon.style.marginRight = "12px";
+    icon.style.color = "#0288d1";
+
+    // Container for text metadata
+    const textContainer = document.createElement("div");
+    textContainer.style.display = "flex";
+    textContainer.style.flexDirection = "column";
+
+    // File Name Element
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "file-name";
+    nameSpan.textContent = fileName;
+    nameSpan.style.fontWeight = "bold";
+    nameSpan.style.wordBreak = "break-all";
+
+    // File Size Element
+    const sizeSpan = document.createElement("span");
+    sizeSpan.className = "file-size";
+    sizeSpan.textContent = formattedSize;
+    sizeSpan.style.fontSize = "12px";
+    sizeSpan.style.color = "#555";
+
+    // Assemble the elements together
+    textContainer.appendChild(nameSpan);
+    textContainer.appendChild(sizeSpan);
+    
+    fileCard.appendChild(icon);
+    fileCard.appendChild(textContainer);
+    
+    messageRow.appendChild(fileCard);
+    
+    // Append the entire row to the chat box
+    chatContainer.appendChild(messageRow);
+
+    // Auto-scroll to the bottom of the chat view
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
